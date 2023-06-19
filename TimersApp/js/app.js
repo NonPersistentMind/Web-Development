@@ -4,74 +4,90 @@ class TimerDashboard extends React.Component {
       {
         mainTitle: 'Practice squat',
         projectTitle: 'Gym Chores',
-        id: '1',
+        id: uuidv4(),
         timeElapsed: 5456099,
         runningSince: Date.now(),
       },
       {
         mainTitle: 'Read a book',
         projectTitle: 'Personal Development',
-        id: '2',
+        id: uuidv4(),
         timeElapsed: 3600000,
         runningSince: Date.now() - 7200000,
       },
       {
         mainTitle: 'Write code',
         projectTitle: 'Web Development',
-        id: '3',
+        id: uuidv4(),
         timeElapsed: 180000,
         runningSince: Date.now() - 120000,
       },
       {
         mainTitle: 'Cook dinner',
         projectTitle: 'Home Tasks',
-        id: '4',
+        id: uuidv4(),
         timeElapsed: 7200000,
         runningSince: Date.now() - 3600000,
       },
       {
         mainTitle: 'Painting',
         projectTitle: 'Artistic Pursuits',
-        id: '5',
+        id: uuidv4(),
         timeElapsed: 4500000,
         runningSince: Date.now() - 900000,
       },
       {
         mainTitle: 'Walk the dog',
         projectTitle: 'Pet Care',
-        id: '6',
+        id: uuidv4(),
         timeElapsed: 1200000,
         runningSince: Date.now() - 600000,
       },
       {
         mainTitle: 'Study Spanish',
         projectTitle: 'Language Learning',
-        id: '7',
+        id: uuidv4(),
         timeElapsed: 300000,
         runningSince: Date.now() - 600000,
       },
       {
         mainTitle: 'Clean the house',
         projectTitle: 'Household Chores',
-        id: '8',
+        id: uuidv4(),
         timeElapsed: 7200000,
         runningSince: Date.now() - 3600000,
       },
       {
         mainTitle: 'Yoga session',
         projectTitle: 'Fitness',
-        id: '9',
+        id: uuidv4(),
         timeElapsed: 2700000,
         runningSince: Date.now() - 1800000,
       },
       {
         mainTitle: 'Write a blog post',
         projectTitle: 'Writing',
-        id: '10',
+        id: uuidv4(),
         timeElapsed: 360000,
         runningSince: Date.now(),
       },
     ]
+  }
+
+  onTimerFormSubmit = (timerData) => {
+    const newTimers = Array.from(this.state.timers);
+    if (!timerData.id) {
+      newTimers.push(
+        {
+          mainTitle: timerData.mainTitle,
+          projectTitle: timerData.projectTitle,
+          id: uuidv4(),
+          timeElapsed: 0,
+          runningSince: Date.now()
+        }
+      )
+      this.setState(Object.assign({}, this.state, {timers: newTimers}));
+    }
   }
 
   render() {
@@ -83,6 +99,7 @@ class TimerDashboard extends React.Component {
         <div className="bottomsticked">
           <ToggleableTimerForm
             isOpen={false}
+            onSubmit={this.onTimerFormSubmit}
           />
         </div>
       </div>
@@ -91,11 +108,6 @@ class TimerDashboard extends React.Component {
 }
 
 class EditableTimerList extends React.Component {
-  second = 1000;
-  minute = this.second * 60;
-  hour = this.minute * 60;
-  day = this.hour * 24;
-
   render() {
     return <div id="timers">
       {
@@ -122,18 +134,30 @@ class ToggleableTimerForm extends React.Component {
   handleFormOpen = () => {
     // const toggleButton = document.getElementById('formToggleButton');
     // toggleButton.toggleAttribute('left-slided');
-    this.setState({isOpen: true})
+    this.setState({ isOpen: true })
+  }
+
+  onFormSubmit = (timerData) => {
+    this.props.onSubmit(timerData);
+    this.setState({ isOpen: false });
+  }
+  onFormDiscard = () => {
+    this.setState({ isOpen: false });
   }
 
   render() {
     return (
-      this.state.isOpen ? <TimerForm /> : (
-        <div id="formToggleButton" className="ui basic content center aligned segment">
-          <button className="ui blue basic icon button" onMouseOver={this.handleFormOpen}>
-            <i className="large icon plus"></i>
-          </button>
-        </div>
-      )
+      this.state.isOpen ?
+        <TimerForm
+          onSubmit={this.onFormSubmit}
+          onDiscard={this.onFormDiscard}
+        /> : (
+          <div id="formToggleButton" className="ui basic content center aligned segment">
+            <button className="ui blue basic icon button" onClick={this.handleFormOpen}>
+              <i className="large icon plus"></i>
+            </button>
+          </div>
+        )
     )
   }
 }
@@ -146,12 +170,14 @@ class EditableTimer extends React.Component {
   render() {
     if (this.state.editableFormOpened) {
       return <TimerForm
+        id={this.props.id}
         mainTitle={this.props.mainTitle}
         projectTitle={this.props.projectTitle}
       />
     }
     else {
       return <TimerComponent
+        id={this.props.id}
         mainTitle={this.props.mainTitle}
         projectTitle={this.props.projectTitle}
         timeElapsed={this.props.timeElapsed}
@@ -162,10 +188,32 @@ class EditableTimer extends React.Component {
 }
 
 class TimerForm extends React.Component {
+  state = {
+    mainTitle: this.props.mainTitle || '',
+    projectTitle: this.props.projectTitle || ''
+  }
+
+  handleTitleChange = (event) => {
+    this.setState(Object.assign({}, this.state, { mainTitle: event.target.value }));
+  }
+  handleProjectChange = (event) => {
+    this.setState(Object.assign({}, this.state, { projectTitle: event.target.value }));
+  }
+
+  handleSubmit = () => {
+    this.props.onSubmit(
+      {
+        'id': this.props.id,
+        'mainTitle': this.state.mainTitle,
+        'projectTitle': this.state.projectTitle,
+      }
+    );
+  }
+
   render() {
-    const buttonText = this.props.mainTitle ? "Save" : "Create";
-    const titleText = this.props.mainTitle ? "Editing" : "Creating";
-    const subtitleText = this.props.mainTitle ? "edit" : "create";
+    const buttonText = this.props.id ? "Save" : "Create";
+    const titleText = this.props.id ? "Editing" : "Creating";
+    const subtitleText = this.props.id ? "edit" : "create";
     return (
       <div className="ui centered card">
         <div className="content">
@@ -177,7 +225,7 @@ class TimerForm extends React.Component {
                 <label className="ui grey basic right pointing label">
                   Title:
                 </label>
-                <input type="text" defaultValue={this.props.mainTitle} />
+                <input type="text" value={this.state.mainTitle} onChange={this.handleTitleChange} />
               </div>
             </div>
             <div className="field">
@@ -185,17 +233,17 @@ class TimerForm extends React.Component {
                 <label className="ui grey basic right pointing label">
                   Project:
                 </label>
-                <input type="text" defaultValue={this.props.projectTitle} />
+                <input type="text" value={this.state.projectTitle} onChange={this.handleProjectChange} />
               </div>
             </div>
             <div className="center aligned">
-              <div className="ui animated basic positive button">
+              <div className="ui animated basic positive button" onClick={this.handleSubmit}>
                 <div className="visible content">{buttonText}</div>
                 <div className="hidden content">
                   <i className="save icon"></i>
                 </div>
               </div>
-              <div className="ui animated basic negative button">
+              <div className="ui animated basic negative button" onClick={this.props.onDiscard}>
                 <div className="visible content">Cancel</div>
                 <div className="hidden content">
                   <i className="undo icon"></i>
@@ -217,6 +265,7 @@ class TimerComponent extends React.Component {
     const hours = (mins - mins % 60) / 60;
     const days = (hours - hours % 24) / 24;
     const elapsed = (days ? `${days}d` : '') + `${hours % 24}h ` + `${mins % 60}m ` + `${sec % 60}s`;
+
     return (
       <div className="ui centered card">
         <div className="timebox">
