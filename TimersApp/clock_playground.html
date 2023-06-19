@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="refresh" content="1000">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .clock {
+            border-radius: 50%;
+            background: #ffffff url(./Assets/Images/ios_clock.svg) center no-repeat;
+            background-size: 88%;
+            height: 20em;
+            /* padding-bottom: 31%; */
+            position: relative;
+            width: 20em;
+          }
+
+          .clock:after {
+            background: #000;
+            border-radius: 50%;
+            content: "";
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 4%;
+            height: 4%;
+            z-index: 10;
+          }
+
+          .minutes-container .hours-container .seconds-container {
+            position:absolute;
+            top:0%;
+            left:0%;
+
+
+            background-color: black;
+            height: 10px;
+            width: 10px;
+          }
+
+          .clock-container>* {
+            position: absolute;
+            top:50%;
+            transform-origin: top center;
+
+          }
+
+          .hours {
+            left:48.75%;
+            transform: rotate(45deg);
+            height:24%;
+            width:2.5%;
+            background-color: black;
+          }
+
+          .minutes {
+            left:49%;
+            transform: rotate(80deg);
+            height:35%;
+            width:2%;
+            background-color: black;
+          }
+
+          .seconds {
+            transform-origin: center 20%;
+            top:40%;
+            left:49.5%;
+            transform: rotate(270deg);
+            height:50%;
+            width:1%;
+            background-color: black;
+          }
+    </style>
+</head>
+
+<body>
+    <div class="clock">
+        <div class="hours-container clock-container">
+            <div class="hours"></div>
+        </div>
+        <div class="minutes-container clock-container">
+            <div class="minutes"></div>
+        </div>
+        <div class="seconds-container clock-container">
+            <div class="seconds"></div>
+        </div>
+    </div>
+</body>
+
+</html>

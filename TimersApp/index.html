@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+
+    <title>Project Two: Timers</title>
+
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css"> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.5.0/semantic.min.css"
+        integrity="sha512-KXol4x3sVoO+8ZsWPFI/r5KBVB/ssCGB5tsv2nVOKwLg33wTFP3fmnXa47FdSVIshVTgsYk/1734xSk9aFIa4A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="./Assets/css/style.css" />
+
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/react@17.0.2/umd/react.development.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/react-dom@17.0.2/umd/react-dom.development.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.5.0/semantic.min.js"
+        integrity="sha512-Xo0Jh8MsOn72LGV8kU5LsclG7SUzJsWGhXbWcYs2MAmChkQzwiW/yTQwdJ8w6UA9C6EVG18GHb/TrYpYCjyAQw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <!-- <scriptx src="vendor/uuid.js"></script> -->
+
+    <!-- <script src="vendor/fetch.js"></script> -->
+    <style>
+        .masthead {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            min-height: 40vh;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="main">
+        <div class="ui inverted vertical center aligned masthead segment">
+            <div class="ui text container">
+                <h1 class="ui inverted header">
+                    Every second counts.
+                </h1>
+                <h2>So, let's focus on what really matters </h2>
+                <div class="ui inverted segment">
+                    <i class="ui huge inverted clock icon"></i>
+                </div>
+            </div>
+
+
+        </div>
+
+        <div id="content" class="ui vertical stripe segment"></div>
+    </div>
+
+    <!-- <script type="text/babel" src="./js/client.js"></script> -->
+
+    <!-- <script type="text/babel" src="./js/helpers.js"></script> -->
+
+    <script type="text/babel" data-plugins="transform-class-properties" src="./js/app.js"></script>
+</body>
+
+</html>
