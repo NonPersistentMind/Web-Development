@@ -1,3 +1,15 @@
+.masthead {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  max-height: 550px;
+  min-height: 350px;
+  height: 40vh;
+}
+
+
 .timebox {
   background: radial-gradient(circle at center 35%, rgb(83, 122, 99), rgb(149, 172, 147));
   display: flex;
@@ -77,8 +89,19 @@
 .bottomsticked {
   z-index: 11;
   position: fixed;
-  bottom: 1vh;
+  bottom: 10px;
+  left: 5px;
+  transition-duration: 0.6s;
 }
+
+.bottomsticked>.card.left-moved {
+  transform: translate(-90%, 0);
+}
+
+.bottomsticked>.card:hover {
+  transform: translate(0, 0);
+}
+
 
 .left-slided {
   transition: translate(-200%, 0) ease-in;

@@ -256,13 +256,45 @@ class TimerForm extends React.Component {
   }
 
   onSubmit = () => {
-    this.props.onSubmit(
-      {
-        'id': this.props.id,
-        'mainTitle': this.state.mainTitle,
-        'projectTitle': this.state.projectTitle,
-      }
-    );
+    const noTitle = this.state.mainTitle.trim() === '';
+    const noProject = this.state.projectTitle.trim() === ''
+    if (! (noTitle || noProject)){
+      this.props.onSubmit(
+        {
+          'id': this.props.id,
+          'mainTitle': this.state.mainTitle,
+          'projectTitle': this.state.projectTitle,
+        }
+      );
+      return;
+    }
+
+    const setError = (element) => {
+      element.classList.remove('grey');
+      element.classList.remove('basic');
+      element.classList.add('red');
+    };
+    const removeError = (element) => {
+      element.classList.add('grey');
+      element.classList.add('basic');
+      element.classList.remove('red');
+    };
+
+    const titleLabel = document.getElementById(this.props.id + 'title');
+    const projectLabel = document.getElementById(this.props.id + 'project');
+    if (noTitle) {
+      setError(titleLabel);
+    }
+    else{
+      removeError(titleLabel);
+    }
+
+    if (noProject) {
+      setError(projectLabel);
+    }
+    else {
+      removeError(projectLabel);
+    }
   }
 
   render() {
@@ -277,7 +309,7 @@ class TimerForm extends React.Component {
           <form className="ui form">
             <div className="field">
               <div className="ui fluid labeled input">
-                <label className="ui grey basic right pointing label">
+                <label id={this.props.id + 'title'} className="ui grey basic right pointing label">
                   Title:
                 </label>
                 <input type="text" value={this.state.mainTitle} onChange={this.handleTitleChange} />
@@ -285,7 +317,7 @@ class TimerForm extends React.Component {
             </div>
             <div className="field">
               <div className="ui fluid labeled input">
-                <label className="ui grey basic right pointing label">
+                <label id={this.props.id + 'project'} className="ui grey basic right pointing label">
                   Project:
                 </label>
                 <input type="text" value={this.state.projectTitle} onChange={this.handleProjectChange} />
