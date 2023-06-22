@@ -72,22 +72,50 @@ class TimerDashboard extends React.Component {
         runningSince: Date.now(),
       },
     ]
-  }
+  };
 
-  onTimerFormSubmit = (timerData) => {
-    const newTimers = Array.from(this.state.timers);
-    if (!timerData.id) {
-      newTimers.push(
-        {
-          mainTitle: timerData.mainTitle,
-          projectTitle: timerData.projectTitle,
-          id: uuidv4(),
-          timeElapsed: 0,
-          runningSince: Date.now()
+  handleTimerCreateFormSubmit = (timerData) => {
+    this.createTimer(timerData);
+  };
+
+  handleTimerEditFormSubmit = (timerData) => {
+    this.editTimer(timerData);
+  };
+
+  handleTimerComponentDelete = (timerID) => {
+    this.deleteTimer(timerID);
+  };
+
+  createTimer = (timerData) => {
+    this.setState({
+      timers: this.state.timers.concat({
+        mainTitle: timerData.mainTitle,
+        projectTitle: timerData.projectTitle,
+        id: uuidv4(),
+        timeElapsed: 0,
+        runningSince: Date.now()
+      })
+    });
+  };
+
+  editTimer = (timerData) => {
+    this.setState({
+      timers: this.state.timers.map(timer => {
+        if (timer.id == timerData.id) {
+          return Object.assign({}, timer, {
+            mainTitle: timerData.mainTitle,
+            projectTitle: timerData.projectTitle
+          });
         }
-      )
-      this.setState(Object.assign({}, this.state, {timers: newTimers}));
-    }
+        return timer;
+      })
+    });
+  };
+
+  deleteTimer = (timerID) => {
+    this.setState({
+      timers: this.state.timers.filter(timer => timerID !== timer.id)
+    });
   }
 
   render() {
@@ -95,11 +123,13 @@ class TimerDashboard extends React.Component {
       <div className="column">
         <EditableTimerList
           timers={this.state.timers}
+          onSubmit={this.handleTimerEditFormSubmit}
+          onDelete={this.handleTimerComponentDelete}
         />
         <div className="bottomsticked">
           <ToggleableTimerForm
             isOpen={false}
-            onSubmit={this.onTimerFormSubmit}
+            onSubmit={this.handleTimerCreateFormSubmit}
           />
         </div>
       </div>
@@ -119,6 +149,8 @@ class EditableTimerList extends React.Component {
             projectTitle={timer.projectTitle}
             timeElapsed={timer.timeElapsed}
             runningSince={timer.runningSince}
+            onSubmit={this.props.onSubmit}
+            onDelete={this.props.onDelete}
           />
         )
       }
@@ -167,12 +199,33 @@ class EditableTimer extends React.Component {
     editableFormOpened: false,
   }
 
+  // When the form is edited and submitted, edit the state to close the form and propagate the data up
+  onEditFormSubmit = (timerData) => {
+    const newState = Object.assign({}, this.state, { editableFormOpened: false });
+    this.setState(newState);
+    this.props.onSubmit(timerData);
+  };
+
+  // Handle the "close" button in the edit form by dismissing any changes whatsoever and switching to the timer component
+  handleEditFormClose = () => {
+    const newState = Object.assign({}, this.state, { editableFormOpened: false });
+    this.setState(newState);
+  };
+
+  handleEditButtonClick = () => {
+    const newState = Object.assign({}, this.state, { editableFormOpened: true });
+    this.setState(newState);
+  };
+
+
   render() {
     if (this.state.editableFormOpened) {
       return <TimerForm
         id={this.props.id}
         mainTitle={this.props.mainTitle}
         projectTitle={this.props.projectTitle}
+        onSubmit={this.onEditFormSubmit}
+        onDiscard={this.handleEditFormClose}
       />
     }
     else {
@@ -182,6 +235,8 @@ class EditableTimer extends React.Component {
         projectTitle={this.props.projectTitle}
         timeElapsed={this.props.timeElapsed}
         runningSince={this.props.runningSince}
+        onEdit={this.handleEditButtonClick}
+        onDelete={this.props.onDelete}
       />
     }
   }
@@ -200,7 +255,7 @@ class TimerForm extends React.Component {
     this.setState(Object.assign({}, this.state, { projectTitle: event.target.value }));
   }
 
-  handleSubmit = () => {
+  onSubmit = () => {
     this.props.onSubmit(
       {
         'id': this.props.id,
@@ -215,7 +270,7 @@ class TimerForm extends React.Component {
     const titleText = this.props.id ? "Editing" : "Creating";
     const subtitleText = this.props.id ? "edit" : "create";
     return (
-      <div className="ui centered card">
+      <div className="ui centered card" onMouseOut={(e) => e.target.toggle}>
         <div className="content">
           <h3 className="center aligned">{titleText} Timer</h3>
           <div className="center aligned meta">Well, let's {subtitleText}</div>
@@ -237,7 +292,7 @@ class TimerForm extends React.Component {
               </div>
             </div>
             <div className="center aligned">
-              <div className="ui animated basic positive button" onClick={this.handleSubmit}>
+              <div className="ui animated basic positive button" onClick={this.onSubmit}>
                 <div className="visible content">{buttonText}</div>
                 <div className="hidden content">
                   <i className="save icon"></i>
@@ -258,6 +313,10 @@ class TimerForm extends React.Component {
 }
 
 class TimerComponent extends React.Component {
+  onDelete = () => {
+    this.props.onDelete(this.props.id);
+  };
+
   render() {
     const msec = this.props.timeElapsed % 1000;
     const sec = (this.props.timeElapsed - msec) / 1000;
@@ -281,10 +340,10 @@ class TimerComponent extends React.Component {
           <div className="ui large grey sub header description">Project: {this.props.projectTitle}</div>
           <div className="right aligned">
             <div className="ui small buttons">
-              <div className="ui blue basic icon button">
+              <div className="ui blue basic icon button" onClick={this.props.onEdit}>
                 <i className="edit icon"></i>
               </div>
-              <div className="ui red basic icon button">
+              <div className="ui red basic icon button" onClick={this.onDelete}>
                 <i className="trash icon"></i>
               </div>
             </div>
