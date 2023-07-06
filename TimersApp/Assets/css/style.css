@@ -6,9 +6,8 @@
 
   max-height: 550px;
   min-height: 350px;
-  height: 40vh;
+  height: 50vh;
 }
-
 
 .timebox {
   background: radial-gradient(circle at center 35%, rgb(83, 122, 99), rgb(149, 172, 147));
@@ -23,12 +22,12 @@
 .clock-item {
   border-radius: 50%;
   border: 0.4rem white solid;
-  background: #ffffff url(../Images/ios_clock.svg) center no-repeat;
+  background: #ffffff  center no-repeat;
   background-size: 88%;
-  height: 11rem;
+  height: 9rem;
   position: relative;
   justify-self: center;
-  width: 11rem;
+  width: 9rem;
 }
 
 .clock-item:after {
@@ -57,53 +56,68 @@
   position: absolute;
   top: 50%;
   transform-origin: top center;
+}
 
+.hours, .minutes {
+  border-radius: 0 0 5px 5px;
+}
+
+.seconds {
+  border-radius: 5px;
 }
 
 .hours {
-  left: 48.75%;
-  transform: rotate(45deg);
-  height: 24%;
-  width: 2.5%;
-  background-color: black;
+  left: 48%;
+  transform: rotate(180deg);
+  height: 30%;
+  width: 4%;
+  background-color: rgb(65, 65, 65);
+  z-index: 3;
 }
 
 .minutes {
-  left: 49%;
-  transform: rotate(80deg);
-  height: 35%;
-  width: 2%;
-  background-color: black;
+  left: 48.5%;
+  transform: rotate(180deg);
+  height: 44%;
+  width: 3%;
+  background-color: rgb(65, 65, 65);
+  z-index: 2;
 }
 
 .seconds {
   transform-origin: center 20%;
-  top: 40%;
-  left: 49.5%;
-  transform: rotate(270deg);
-  height: 50%;
-  width: 1%;
-  background-color: black;
+  top: 38%;
+  left: 49.25%;
+  transform: rotate(180deg);
+  height: 60%;
+  width: 1.5%;
+  background-color: rgb(65, 65, 65);
+  z-index: 1;
 }
 
 .bottomsticked {
   z-index: 11;
   position: fixed;
-  bottom: 10px;
-  left: 5px;
+  bottom: 0;
+  left: 0;
   transition-duration: 0.6s;
 }
 
-.bottomsticked>.card.left-moved {
-  transform: translate(-90%, 0);
+.bottomsticked>div {
+  padding-left: 10px;
+  padding-bottom: 10px;
 }
 
-.bottomsticked>.card:hover {
+.slided {
+  transition-duration: 0.6s;
+  transform: translate(-85%, 0);
+}
+
+.slided:hover {
+  /* transition-duration: 0.6s; */
   transform: translate(0, 0);
 }
 
-
-.left-slided {
-  transition: translate(-200%, 0) ease-in;
-  transition-duration: 0.5s;
+.no-margin {
+  margin: 0 0 0 0 !important;
 }

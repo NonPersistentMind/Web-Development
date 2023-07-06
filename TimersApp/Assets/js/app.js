@@ -1,77 +1,6 @@
 class TimerDashboard extends React.Component {
   state = {
-    timers: [
-      {
-        mainTitle: 'Practice squat',
-        projectTitle: 'Gym Chores',
-        id: uuidv4(),
-        timeElapsed: 5456099,
-        runningSince: Date.now(),
-      },
-      {
-        mainTitle: 'Read a book',
-        projectTitle: 'Personal Development',
-        id: uuidv4(),
-        timeElapsed: 3600000,
-        runningSince: Date.now() - 7200000,
-      },
-      {
-        mainTitle: 'Write code',
-        projectTitle: 'Web Development',
-        id: uuidv4(),
-        timeElapsed: 180000,
-        runningSince: Date.now() - 120000,
-      },
-      {
-        mainTitle: 'Cook dinner',
-        projectTitle: 'Home Tasks',
-        id: uuidv4(),
-        timeElapsed: 7200000,
-        runningSince: Date.now() - 3600000,
-      },
-      {
-        mainTitle: 'Painting',
-        projectTitle: 'Artistic Pursuits',
-        id: uuidv4(),
-        timeElapsed: 4500000,
-        runningSince: Date.now() - 900000,
-      },
-      {
-        mainTitle: 'Walk the dog',
-        projectTitle: 'Pet Care',
-        id: uuidv4(),
-        timeElapsed: 1200000,
-        runningSince: Date.now() - 600000,
-      },
-      {
-        mainTitle: 'Study Spanish',
-        projectTitle: 'Language Learning',
-        id: uuidv4(),
-        timeElapsed: 300000,
-        runningSince: Date.now() - 600000,
-      },
-      {
-        mainTitle: 'Clean the house',
-        projectTitle: 'Household Chores',
-        id: uuidv4(),
-        timeElapsed: 7200000,
-        runningSince: Date.now() - 3600000,
-      },
-      {
-        mainTitle: 'Yoga session',
-        projectTitle: 'Fitness',
-        id: uuidv4(),
-        timeElapsed: 2700000,
-        runningSince: Date.now() - 1800000,
-      },
-      {
-        mainTitle: 'Write a blog post',
-        projectTitle: 'Writing',
-        id: uuidv4(),
-        timeElapsed: 360000,
-        runningSince: Date.now(),
-      },
-    ]
+    timers: []
   };
 
   handleTimerCreateFormSubmit = (timerData) => {
@@ -86,6 +15,34 @@ class TimerDashboard extends React.Component {
     this.deleteTimer(timerID);
   };
 
+  handleTimerStartButtonClick = (timerID) => {
+    this.setState({
+      timers: this.state.timers.map(timer => timer.id !== timerID ? timer : (
+        {
+          id: timer.id,
+          mainTitle: timer.mainTitle,
+          projectTitle: timer.projectTitle,
+          runningSince: Date.now(),
+          timeElapsed: timer.timeElapsed
+        }
+      ))
+    });
+  };
+
+  handleTimerPauseButtonClick = (timerID) => {
+    this.setState({
+      timers: this.state.timers.map(timer => timer.id !== timerID ? timer : (
+        {
+          id: timer.id,
+          mainTitle: timer.mainTitle,
+          projectTitle: timer.projectTitle,
+          runningSince: null,
+          timeElapsed: timer.timeElapsed + (Date.now() - timer.runningSince)
+        }
+      ))
+    });
+  };
+
   createTimer = (timerData) => {
     this.setState({
       timers: this.state.timers.concat({
@@ -93,7 +50,7 @@ class TimerDashboard extends React.Component {
         projectTitle: timerData.projectTitle,
         id: uuidv4(),
         timeElapsed: 0,
-        runningSince: Date.now()
+        runningSince: null,
       })
     });
   };
@@ -118,6 +75,12 @@ class TimerDashboard extends React.Component {
     });
   }
 
+  componentDidMount() {
+    fetch('app/timers/').then((response) => {
+      console.log(response.body);
+    })
+  }
+
   render() {
     return <div className="ui one column centered grid">
       <div className="column">
@@ -125,6 +88,8 @@ class TimerDashboard extends React.Component {
           timers={this.state.timers}
           onSubmit={this.handleTimerEditFormSubmit}
           onDelete={this.handleTimerComponentDelete}
+          onTimerStarted={this.handleTimerStartButtonClick}
+          onTimerPaused={this.handleTimerPauseButtonClick}
         />
         <div className="bottomsticked">
           <ToggleableTimerForm
@@ -151,6 +116,8 @@ class EditableTimerList extends React.Component {
             runningSince={timer.runningSince}
             onSubmit={this.props.onSubmit}
             onDelete={this.props.onDelete}
+            onTimerStarted={this.props.onTimerStarted}
+            onTimerPaused={this.props.onTimerPaused}
           />
         )
       }
@@ -164,8 +131,6 @@ class ToggleableTimerForm extends React.Component {
   }
 
   handleFormOpen = () => {
-    // const toggleButton = document.getElementById('formToggleButton');
-    // toggleButton.toggleAttribute('left-slided');
     this.setState({ isOpen: true })
   }
 
@@ -177,13 +142,21 @@ class ToggleableTimerForm extends React.Component {
     this.setState({ isOpen: false });
   }
 
+  handleMouseOutEvent = (event) => {
+    event.currentTarget.classList.add('slided')
+  }
+
   render() {
     return (
       this.state.isOpen ?
-        <TimerForm
-          onSubmit={this.onFormSubmit}
-          onDiscard={this.onFormDiscard}
-        /> : (
+        (
+          <div onMouseOver={this.handleMouseInEvent} onMouseOut={this.handleMouseOutEvent}>
+            <TimerForm
+              onSubmit={this.onFormSubmit}
+              onDiscard={this.onFormDiscard}
+            />
+          </div>
+        ) : (
           <div id="formToggleButton" className="ui basic content center aligned segment">
             <button className="ui blue basic icon button" onClick={this.handleFormOpen}>
               <i className="large icon plus"></i>
@@ -237,6 +210,8 @@ class EditableTimer extends React.Component {
         runningSince={this.props.runningSince}
         onEdit={this.handleEditButtonClick}
         onDelete={this.props.onDelete}
+        onTimerStarted={this.props.onTimerStarted}
+        onTimerPaused={this.props.onTimerPaused}
       />
     }
   }
@@ -258,7 +233,7 @@ class TimerForm extends React.Component {
   onSubmit = () => {
     const noTitle = this.state.mainTitle.trim() === '';
     const noProject = this.state.projectTitle.trim() === ''
-    if (! (noTitle || noProject)){
+    if (!(noTitle || noProject)) {
       this.props.onSubmit(
         {
           'id': this.props.id,
@@ -285,7 +260,7 @@ class TimerForm extends React.Component {
     if (noTitle) {
       setError(titleLabel);
     }
-    else{
+    else {
       removeError(titleLabel);
     }
 
@@ -349,19 +324,38 @@ class TimerComponent extends React.Component {
     this.props.onDelete(this.props.id);
   };
 
+  componentDidMount() {
+    this.updateInteval = setInterval(() => this.forceUpdate(), 50);
+  }
+
+  onSwitchTimerButtonClick = (timerStarted) => {
+    if (timerStarted) {
+      this.props.onTimerStarted(this.props.id);
+    }
+    else {
+      this.props.onTimerPaused(this.props.id);
+    }
+  }
+
   render() {
-    const msec = this.props.timeElapsed % 1000;
-    const sec = (this.props.timeElapsed - msec) / 1000;
+    const runningTime = this.props.runningSince ? (Date.now() - this.props.runningSince) : 0; // Either define as exact time the timer is running or set to 0
+    const timeElapsed = runningTime + this.props.timeElapsed;
+    const msec = timeElapsed % 1000;
+    const sec = (timeElapsed - msec) / 1000;
     const mins = (sec - sec % 60) / 60;
     const hours = (mins - mins % 60) / 60;
-    const days = (hours - hours % 24) / 24;
+    const days = (hours - hours % 24) / 24; 
     const elapsed = (days ? `${days}d` : '') + `${hours % 24}h ` + `${mins % 60}m ` + `${sec % 60}s`;
 
     return (
       <div className="ui centered card">
         <div className="timebox">
-          <ClockComponent />
-          <a className="ui big olive basic pointing label">
+          <ClockComponent 
+            seconds={sec%60}
+            minutes={mins%60}
+            hours={hours%12}
+          />
+          <a className="ui big basic pointing label">
             {elapsed}
           </a>
         </div>
@@ -380,26 +374,70 @@ class TimerComponent extends React.Component {
               </div>
             </div>
           </div>
+          <div className="center aligned">
+            <ButtonComponent
+              runningSince={this.props.runningSince}
+              onSwitchTimer={this.onSwitchTimerButtonClick}
+            />
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.updateInteval);
+  }
+}
+
+class ClockComponent extends React.Component {
+  render() {
+    const secRotation = "rotate(" + ((6*this.props.seconds + 180) % 360) + "deg)";
+    const minsRotation = "rotate(" + ((6*this.props.minutes + 180) % 360) + "deg)";
+    const hoursRotation = "rotate(" + ((15*this.props.hours + 180) % 360) + "deg)";
+
+    const secHandElement = <div className="seconds" style={{transform: secRotation}}></div>;
+    const minsHandElement = <div className="minutes" style={{transform: minsRotation}}></div>;
+    const hoursHandElement = <div className="hours" style={{transform: hoursRotation}}></div>;
+    return (
+      <div className="clock-item">
+        <div className="hours-container clock-container">
+          {hoursHandElement}
+        </div>
+        <div className="minutes-container clock-container">
+          {minsHandElement}
+        </div>
+        <div className="seconds-container clock-container">
+         {secHandElement} 
         </div>
       </div>
     )
   }
 }
 
-class ClockComponent extends React.Component {
+class ButtonComponent extends React.Component {
+  state = {
+    running: this.props.runningSince ? true : false,
+  }
+
+  onSwitchTimer = () => {
+    this.setState(
+      Object.assign({}, this.state, { running: ! this.state.running, aaa: true }),
+      () => this.props.onSwitchTimer(this.state.running)
+    );
+  }
+
   render() {
     return (
-      <div className="clock-item">
-        <div className="hours-container clock-container">
-          <div className="hours"></div>
-        </div>
-        <div className="minutes-container clock-container">
-          <div className="minutes"></div>
-        </div>
-        <div className="seconds-container clock-container">
-          <div className="seconds"></div>
-        </div>
-      </div>
+      this.state.running ? (
+        < div className="ui circular basic red button" onClick={this.onSwitchTimer}>
+          <i className="pause icon no-margin"></i>
+        </div >
+      ) : (
+        < div className="ui circular basic green button" onClick={this.onSwitchTimer}>
+          <i className="play icon no-margin"></i>
+        </div >
+      )
     )
   }
 }
