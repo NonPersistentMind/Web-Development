@@ -567,7 +567,7 @@
     }
 
     .brand {
-        font-size: 3rem;
+        font-size: 4rem;
         margin-right: 0.5rem;
         align-items: center;
     }
@@ -575,17 +575,26 @@
     /* .navbar-end {
         margin-right: 2vw;
     } */
+    .navbar-menu .navbar-link {
+        font-size: 1.2rem;
+    }
+
+    .navbar-menu .navbar-item .message {
+        font-size: 1.1rem;
+    }
 
     .navbar-link:not(.is-arrowless)::after {
         border-color: rgb(254, 254, 231);
         height: 0.85rem;
         width: 0.85rem;
         margin-top: -0.5rem;
+        font-size: 1.2rem;
     }
 
     .navbar-dropdown>.navbar-item {
         transition-property: -webkit-backdrop-filter backdrop-filter;
         transition-duration: 0.33s;
+        font-size: 0.95rem;
     }
 
     .navbar-dropdown>.navbar-item:hover {
