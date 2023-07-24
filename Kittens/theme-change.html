@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DarkLight</title>
+    <style>
+        body {
+            overflow: hidden;
+            background-color: #e8eaf6;
+        }
+
+        .animate-box {
+            width: 30rem;
+            height: 30rem;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .svg-container {
+            width: 30rem;
+            height: 30rem;
+        }
+
+        .sun-circle {
+            fill: #5c6bc0;
+        }
+
+        .moon-shadow {
+            fill: #424242;
+        }
+
+        .sun-rays {
+            stroke: #5c6bc0;
+            stroke-width: 8;
+            stroke-linecap: round;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="animate-box">
+        <svg class="svg-container" viewBox="-50 -50 200 200">
+            <circle cx="50" cy="50" r="40" class="sun-circle" />
+            <circle cx="72" cy="34" r="40" class="moon-shadow" />
+
+            <line x1="50" y1="-25" x2="50" y2="-5" class="sun-rays" />
+            <line x1="50" y1="125" x2="50" y2="105" class="sun-rays" />
+
+            <line x1="-25" y1="50" x2="-5" y2="50" class="sun-rays" />
+            <line x1="125" y1="50" x2="105" y2="50" class="sun-rays" />
+
+            <line x1="-5" y1="-5" x2="10" y2="10" class="sun-rays" />
+            <line x1="90" y1="90" x2="105" y2="105" class="sun-rays" />
+
+            <line x1="15" y1="85" x2="-5" y2="105" class="sun-rays" />
+            <line x1="105" y1="-5" x2="85" y2="15" class="sun-rays" />
+
+            Sorry, your browser does not support inline SVG.
+        </svg>
+
+    </div>
+
+    <script src="js/anime.min.js"></script>
+    <script>
+        var animation = anime.timeline({
+            easing: "easeInOutExpo",
+            direction: "alternate",
+            loop: true
+        })
+            .add(
+                {
+                    targets: ".animate-box ",
+                    background: "#424242",
+                    borderRadius: ["10%", "50%"]
+                },
+                0
+            )
+            .add({ targets: ".sun-circle", fill: "#e8eaf6" }, 0)
+            .add({ targets: ".sun-rays", stroke: "#424242" }, 0)
+            .add(
+                {
+                    targets: ".moon-shadow",
+                    fill: "#424242",
+                    delay: 550,
+                    duration: 500,
+                    translateX: [108, 0],
+                    translateY: [-8, 0],
+                    scale: [0, 1]
+                },
+                0
+            )
+            .add({ targets: ".svg-container", rotate: [40, 0] }, 0)
+            .add({ targets: "body", background: "#212121" }, 0);
+
+    </script>
+</body>
+
+</html>

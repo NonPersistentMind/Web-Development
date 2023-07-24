@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ua">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+
+
+  <title>Document</title>
+  <link rel="stylesheet" href="/css/photoswipe.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+  <script src="https://kit.fontawesome.com/345af95697.js" crossorigin="anonymous"></script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+
+    .tabs {
+      display: flex;
+      justify-content: center;
+    }
+
+    .tab-button {
+      background-color: #f1f1f1;
+      border: none;
+      padding: 10px 20px;
+      cursor: pointer;
+    }
+
+    .tab-button.active {
+      background-color: #ccc;
+    }
+
+    .tab-content {
+      opacity: 0;
+      visibility: hidden;
+      margin-top: 20px;
+      transition: opacity 0.5s, visibility 0.5s;
+    }
+
+    .tab-content.active {
+      opacity: 1;
+      visibility: visible;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="tabs">
+    <button class="tab-button active" data-tab="tab1">Tab 1</button>
+    <button class="tab-button" data-tab="tab2">Tab 2</button>
+    <button class="tab-button" data-tab="tab3">Tab 3</button>
+  </div>
+
+  <div class="tab-content" id="tab1">
+    <h2>Content for Tab 1</h2>
+    <p>This is the content for Tab 1.</p>
+  </div>
+
+  <div class="tab-content" id="tab2">
+    <h2>Content for Tab 2</h2>
+    <p>This is the content for Tab 2.</p>
+  </div>
+
+  <div class="tab-content" id="tab3">
+    <h2>Content for Tab 3</h2>
+    <p>This is the content for Tab 3.</p>
+  </div>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const tabButtons = document.querySelectorAll(".tab-button");
+      const tabContents = document.querySelectorAll(".tab-content");
+
+      // Add click event listener to each tab button
+      tabButtons.forEach((button) => {
+        button.addEventListener("click", function () {
+          // Remove active class from all buttons and tab contents
+          tabButtons.forEach((btn) => btn.classList.remove("active"));
+          tabContents.forEach((content) => content.classList.remove("active"));
+
+          // Add active class to the clicked button
+          const targetTab = this.getAttribute("data-tab");
+          this.classList.add("active");
+
+          // Show the corresponding tab content with a slight delay
+          setTimeout(() => {
+            const targetContent = document.getElementById(targetTab);
+            targetContent.classList.add("active");
+          }, 100); // Adjust the delay time as needed
+        });
+      });
+    });
+
+
+  </script>
+
+</html>
