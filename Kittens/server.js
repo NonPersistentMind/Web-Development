@@ -4,8 +4,14 @@ const path = require('path');
 const app = express();
 const PORT = 3000;
 
+
+app.use('/', (req, res, next) => {
+    req.url = req.url.replace(/^\/assets/, ''); // Remove '/assets' from the URL
+    next();
+});
+
 // Serve static files from the public folder
-app.use(express.static('assets'));
+app.use(express.static(path.join(__dirname, 'assets')));
 
 // GET route for "/"
 app.get('/', (req, res) => {
@@ -23,8 +29,8 @@ app.get('/theme', (req, res) => {
 // GET route for "/app/timers"
 app.get('/app/timers', (req, res) => {
     fs.readFile(path.join(__dirname, 'data.json'), 'utf-8', (err, data) => {
-        if (err){
-            res.send('Oups, some trouble happened'+'\n\n'+err);
+        if (err) {
+            res.send('Oups, some trouble happened' + '\n\n' + err);
         }
         else {
             res.send(JSON.stringify(data));
