@@ -4,7 +4,7 @@
     }
 
     html {
-        font-size: 15px;
+        font-size: 10px;
     }
 
     /* Styles for narrow screens (mobile) */
@@ -297,10 +297,6 @@
         pointer-events: none;
     }
 
-    .detailed-card.flipped .front,
-    .detailed-card:not(.flipped) .back {
-        pointer-events: none;
-    }
 
     .pictures-button {
         border-radius: 100% 0 0 100%;
@@ -365,7 +361,7 @@
 
 @media (min-width: 769px) {
     html {
-        font-size: 14px !important;
+        font-size: 14px;
     }
 
     .food-image-column {
@@ -562,6 +558,9 @@
 
 
 @media (min-width: 1025px) {
+    #main .initial-section {
+        overflow-x: hidden;
+    }    
 
     .hero-body>.title {
         transform: translateY(-50%);

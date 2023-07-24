@@ -1,22 +1,26 @@
 document.addEventListener("DOMContentLoaded", function () {
-    var mainVideo = document.querySelector("#prime-video");
+    var video = document.querySelector("#prime-video");
 
     // Set up a scroll event listener.
-    window.addEventListener("scroll", () => {
-        const videoRect = mainVideo.getBoundingClientRect();
-        const viewportRect = window.innerRect;
+    function isVideoVisible() {
+        const rect = video.getBoundingClientRect();
+        return (
+            Math.abs(rect.top) <= 2*video.clientHeight/3
+        );
+    }
 
-        if (videoRect.top < viewportRect.top ||
-            videoRect.bottom > viewportRect.bottom ||
-            videoRect.left < viewportRect.left ||
-            videoRect.right > viewportRect.right) {
-            // Pause the video.
-            mainVideo.pause();
-        } else {
-            // Resume the video.
-            mainVideo.play();
+    // Function to pause the video when it is not visible
+    function pauseVideoOnScroll() {
+        if (isVideoVisible()) {
+            video.play();
         }
-    });
+        else {
+            video.pause();
+        }
+    }
+
+    // Add scroll event listener to the window
+    window.addEventListener("scroll", pauseVideoOnScroll);
 
 
 
@@ -92,7 +96,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Function to stop the slideshow
         function stopSlideshow() {
-            if(intervalID) {
+            if (intervalID) {
                 clearInterval(intervalID);
                 intervalID = null;
             }
