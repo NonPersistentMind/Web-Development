@@ -91,7 +91,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 flexPhotos[currentIndex].classList.remove("active");
                 currentIndex = (currentIndex + 1) % flexPhotos.length;
                 flexPhotos[currentIndex].classList.add("active");
-            }, 3000); // Change the interval duration (in milliseconds) as needed
+            }, 2300); // Change the interval duration (in milliseconds) as needed
         }
 
         // Function to stop the slideshow

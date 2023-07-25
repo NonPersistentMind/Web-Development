@@ -1,6 +1,6 @@
 @media (max-width: 1024px) {
     :root {
-        --menu-color: rgba(255, 255, 255, 0.75);
+        --menu-color: rgba(255, 255, 255, 0.88);
     }
 
     html {
@@ -43,7 +43,7 @@
         width: 4.6rem;
         height: 4.6rem;
 
-        border-radius: 8px 0 0 8px;
+        border-radius: 15px 0 0 15px;
 
         background-color: var(--menu-color);
 
@@ -56,6 +56,10 @@
         padding-left: 45px;
 
         padding-bottom: 0.33rem;
+    }
+
+    .hero .navbar-menu .navbar-link {
+        font-size: 1.3rem;
     }
 
     .navbar-dropdown>.navbar-item {
@@ -105,18 +109,28 @@
         z-index: 1;
     }
 
+    .hero .navbar-menu .navbar-end .navbar-item .message-header {
+        justify-content: center;
+        font-size: 1.1rem;
+    }
+
     .no-bottom-border {
         border-bottom-left-radius: 0px !important;
         border-bottom-right-radius: 0px !important;
     }
 
-    .additional-info {
+    .navbar .message .additional-info .title {
+        font-size: 1.15rem;
+    }
+
+    .navbar .message .additional-info {
         background-color: rgba(238, 247, 255, 0.93) !important;
         position: absolute;
         left: 100vw;
         width: 100%;
 
         z-index: 3;
+        font-size: 1.05rem;
 
         border-radius: 0 0 5px 5px !important;
 
@@ -148,8 +162,6 @@
         font-size: 11px;
 
         -webkit-tap-highlight-color: transparent;
-
-
     }
 
     #ration-plus {
